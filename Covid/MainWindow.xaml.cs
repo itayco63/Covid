@@ -13,6 +13,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using IronPython.Hosting;
 using Microsoft.Scripting.Hosting;
+using System.Diagnostics;
 
 namespace Covid
 {
@@ -28,7 +29,7 @@ namespace Covid
         int numOfGood, numOfSuspect, numOfBad;
         private const string validation_file = "validation.json";
         private string path;
-        
+
         //////graph handling
 
         public Func<double, string> YFormatter { get; set; }
@@ -114,7 +115,7 @@ namespace Covid
             numOfBad = 0;
             numOfSuspect = 0;
             numOfGood = 0;
-            path = Directory.GetParent(Environment.CurrentDirectory).Parent.Parent.FullName;
+            path = System.IO.Directory.GetCurrentDirectory();
         }
 
         //////
@@ -186,15 +187,15 @@ namespace Covid
 
         //////
 
-        
-        
-       
-        
+
+
+
+
         //////load items from Json file
         public void LoadJson()
         {
-            
-            using (StreamReader r = new StreamReader(path+ @"\" +validation_file))
+
+            using (StreamReader r = new StreamReader(path + @"\" + validation_file))
             {
                 string json = r.ReadToEnd();
                 items = JsonConvert.DeserializeObject<List<Root>>(json);
@@ -209,8 +210,10 @@ namespace Covid
         //////run python file
         private void doPython()
         {
-            string strCmdText = path + @"\"+"main.py";
-            System.Diagnostics.Process.Start("python.exe", strCmdText);
+            string strCmdText = path + @"\" + "main.py";
+            Process p = Process.Start("python.exe", strCmdText);
+            p.WaitForExit();
+
         }
         ///////
 
@@ -220,12 +223,12 @@ namespace Covid
         //////runing prediction and filling table
         private void Run_prediction(object sender, RoutedEventArgs e)
         {
-            doPython();
+            //doPython();
             string name;
             List<double> infections;
             List<double> predictions;
             List<string> new_dates;
-            double pred, exp, badPrec, goodPrec, susPrec;
+            double lastDay, pred, exp, badPrec, goodPrec, susPrec;
             LoadJson();
 
             Root[] temp = items.ToArray();              //move to array and sort by names
@@ -245,8 +248,8 @@ namespace Covid
 
                 exp = temp[i].expected_cases;
                 pred = temp[i].Prediction;
-
-                MahsanList.Add(new Country(name, getStatus(pred, exp), new ChartValues<double>(infections), new ChartValues<double>(predictions), new_dates));
+                lastDay = temp[i].infection_trend[infections.Count - 2];
+                MahsanList.Add(new Country(name, getStatus(lastDay,pred, exp), new ChartValues<double>(infections), new ChartValues<double>(predictions), new_dates));
 
             }
             intializeCountries();                                       //putting items in present list
@@ -265,7 +268,7 @@ namespace Covid
             total_bad.Content = "Total bad data: " + numOfBad + "  " + badPrec + "%";
             total_sus.Content = "Total suspected trends: " + numOfSuspect + "  " + susPrec + "%";
             total_good.Content = "Total good trends: " + numOfGood + "  " + goodPrec + "%";
-            
+
         }
 
 
@@ -273,30 +276,20 @@ namespace Covid
 
 
 
-        private CountryStatusEnum.CountryStatus getStatus(double pred, double exp)      //get status of trend
+        private CountryStatusEnum.CountryStatus getStatus(double lastDay, double pred, double exp)      //get status of trend
         {
-            double daviation = (pred - exp) / pred * 100;
+            double daviation = (((pred - exp) / pred) * 100);
 
-            if (exp > pred && daviation < -10)            //check if bad descending
+            if (lastDay > pred && daviation < -10)            //check if bad descending
             {
                 numOfBad++;
                 return CountryStatusEnum.CountryStatus.badData;
             }
 
-            else if (exp < pred && daviation > 5)            //check if bad ascending
+            else if (10 < pred - exp && daviation > 5)            //check if bad ascending
             {
                 numOfSuspect++;
-                if (daviation < 10)
-                {
-
-                    return CountryStatusEnum.CountryStatus.midSuspect;
-                }
-
-                else
-                {
-
-                    return CountryStatusEnum.CountryStatus.Suspect;
-                }
+                return CountryStatusEnum.CountryStatus.Suspect;
 
             }
             else
@@ -336,7 +329,7 @@ namespace Covid
             int len = Countries.Count;
             for (int i = len - 1; i >= 0; i--)
             {
-                if (!(Countries[i].Status.Equals(CountryStatusEnum.CountryStatus.Suspect) || Countries[i].Status.Equals(CountryStatusEnum.CountryStatus.midSuspect) || Countries[i].Status.Equals(CountryStatusEnum.CountryStatus.Status)))
+                if (!(Countries[i].Status.Equals(CountryStatusEnum.CountryStatus.Suspect) || Countries[i].Status.Equals(CountryStatusEnum.CountryStatus.Status)))
                 {
                     Countries.Remove(Countries[i]);
 

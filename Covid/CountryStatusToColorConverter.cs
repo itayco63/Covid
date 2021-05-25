@@ -23,8 +23,6 @@ namespace Covid
                     return Brushes.Black;
                 case CountryStatus.badData:
                     return Brushes.Blue;
-                case CountryStatus.midSuspect:
-                    return Brushes.Gold;
                 default:
                     return Brushes.Yellow;
             }
