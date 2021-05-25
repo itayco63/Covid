@@ -26,8 +26,9 @@ namespace Covid
         List<Root> items; //items from Json file
         public event PropertyChangedEventHandler PropertyChanged;
         int numOfGood, numOfSuspect, numOfBad;
-
-
+        private const string validation_file = "validation.json";
+        private string path;
+        
         //////graph handling
 
         public Func<double, string> YFormatter { get; set; }
@@ -113,6 +114,7 @@ namespace Covid
             numOfBad = 0;
             numOfSuspect = 0;
             numOfGood = 0;
+            path = Directory.GetParent(Environment.CurrentDirectory).Parent.Parent.FullName;
         }
 
         //////
@@ -191,7 +193,8 @@ namespace Covid
         //////load items from Json file
         public void LoadJson()
         {
-            using (StreamReader r = new StreamReader(@"C:\Users\itayc\source\repos\Covid\Covid\validation.json"))
+            
+            using (StreamReader r = new StreamReader(path+ @"\" +validation_file))
             {
                 string json = r.ReadToEnd();
                 items = JsonConvert.DeserializeObject<List<Root>>(json);
@@ -204,9 +207,9 @@ namespace Covid
 
 
         //////run python file
-        private static void doPython()
+        private void doPython()
         {
-            String strCmdText = @"C:\Users\itayc\source\repos\Covid\Covid\main.py";
+            string strCmdText = path + @"\"+"main.py";
             System.Diagnostics.Process.Start("python.exe", strCmdText);
         }
         ///////
