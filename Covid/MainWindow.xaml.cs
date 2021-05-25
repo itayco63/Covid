@@ -14,6 +14,7 @@ using Newtonsoft.Json.Linq;
 using IronPython.Hosting;
 using Microsoft.Scripting.Hosting;
 using System.Diagnostics;
+using System.Globalization;
 
 namespace Covid
 {
@@ -29,7 +30,7 @@ namespace Covid
         int numOfGood, numOfSuspect, numOfBad;
         private const string validation_file = "validation.json";
         private string path;
-
+        int table_sort = -1;
         //////graph handling
 
         public Func<double, string> YFormatter { get; set; }
@@ -80,6 +81,31 @@ namespace Covid
             {
                 return String.Compare(x.country_name, y.country_name);
             }
+            public static int CompareByDate(Root x, Root y)
+            {
+                if (DateTime.Parse(x.dates[0], CultureInfo.InvariantCulture) <= DateTime.Parse(y.dates[0], CultureInfo.InvariantCulture))
+                {
+                    return - 1;               
+                }
+                else
+                {
+                    return 1;
+                }
+
+
+            }
+            public static int CompareByAccuracy(Root x, Root y)
+            {
+                if (DateTime.Parse(x.dates[0], CultureInfo.InvariantCulture) <= DateTime.Parse(y.dates[0], CultureInfo.InvariantCulture))
+                {
+                    return -1;
+                }
+                else
+                {
+                    return 1;
+                }
+            }
+
         }
         ///////
 
@@ -151,7 +177,7 @@ namespace Covid
                 SelectedCountry = tempCountry;
 
                 country.Visibility = Visibility.Visible;
-                country_content.Visibility = Visibility.Visible;
+                country.Content = "Country: " + SelectedCountry.Name;
                 if (chart.Visibility == Visibility.Hidden)
                 {
                     chart.Visibility = Visibility.Visible;
@@ -181,7 +207,7 @@ namespace Covid
             {
                 chart.Visibility = Visibility.Hidden;
                 country.Visibility = Visibility.Hidden;
-                country_content.Visibility = Visibility.Hidden;
+                
             }
         }
 
@@ -218,21 +244,29 @@ namespace Covid
         ///////
 
 
+        private void reset()
+        {
+            MahsanList.Clear();
+            numOfGood = 0;
+            numOfSuspect = 0;
+            numOfBad=0;
+        }
 
-
+        
         //////runing prediction and filling table
         private void Run_prediction(object sender, RoutedEventArgs e)
         {
+            reset();
             //doPython();
             string name;
             List<double> infections;
             List<double> predictions;
             List<string> new_dates;
-            double lastDay, pred, exp, badPrec, goodPrec, susPrec;
+            double daviation, lastDay, pred, exp, badPrec, goodPrec, susPrec;
             LoadJson();
 
             Root[] temp = items.ToArray();              //move to array and sort by names
-            MahsanList.Add(new Country());
+            //MahsanList.Add(new Country());
             Array.Sort(temp, Root.CompareByNames);
             int len = temp.Length;
 
@@ -249,13 +283,19 @@ namespace Covid
                 exp = temp[i].expected_cases;
                 pred = temp[i].Prediction;
                 lastDay = temp[i].infection_trend[infections.Count - 2];
-                MahsanList.Add(new Country(name, getStatus(lastDay,pred, exp), new ChartValues<double>(infections), new ChartValues<double>(predictions), new_dates));
+                daviation = (((pred - exp) / pred) * 100);
+                MahsanList.Add(new Country(name, getStatus(daviation,lastDay, pred, exp), new ChartValues<double>(infections), new ChartValues<double>(predictions), new_dates, Math.Round(daviation)));
 
             }
             intializeCountries();                                       //putting items in present list
             countriesList.Visibility = Visibility.Visible;
             Mark_Ok.Visibility = Visibility.Visible;
             Mark_sus.Visibility = Visibility.Visible;
+            sort.Visibility = Visibility.Visible;
+            byAcur.Visibility = Visibility.Visible;
+            byDate.Visibility = Visibility.Visible;
+            byName.Visibility = Visibility.Visible;
+
 
             goodPrec = (double)numOfGood / len * 100;                     //calculating statistics
             badPrec = (double)numOfBad / len * 100;
@@ -265,9 +305,9 @@ namespace Covid
             susPrec = Math.Round(susPrec, 2);
 
             Total.Content = "Total trends: " + temp.Length;                                         //showing statistics
-            total_bad.Content = "Total bad data: " + numOfBad + "  " + badPrec + "%";
-            total_sus.Content = "Total suspected trends: " + numOfSuspect + "  " + susPrec + "%";
-            total_good.Content = "Total good trends: " + numOfGood + "  " + goodPrec + "%";
+            total_bad.Content = "Total bad data: " + numOfBad + "  ->  " + badPrec + "%";
+            total_sus.Content = "Total suspected trends: " + numOfSuspect + "  ->  " + susPrec + "%";
+            total_good.Content = "Total good trends: " + numOfGood + "  ->  " + goodPrec + "%";
 
         }
 
@@ -276,9 +316,9 @@ namespace Covid
 
 
 
-        private CountryStatusEnum.CountryStatus getStatus(double lastDay, double pred, double exp)      //get status of trend
+        private CountryStatusEnum.CountryStatus getStatus(double daviation, double lastDay, double pred, double exp)      //get status of trend
         {
-            double daviation = (((pred - exp) / pred) * 100);
+            
 
             if (lastDay > pred && daviation < -10)            //check if bad descending
             {
@@ -354,5 +394,45 @@ namespace Covid
 
 
         /////
+
+
+        private void sortName(object sender, RoutedEventArgs e)
+        {
+            table_sort = 0;
+            sortTable();
+        }
+        private void sortDate(object sender, RoutedEventArgs e)
+        {
+            table_sort = 1;
+            sortTable();
+        }
+        private void sortAcur(object sender, RoutedEventArgs e)
+        {
+            table_sort = 2;
+            sortTable();
+        }
+        
+        public void sortTable()
+        {
+            Country[] temp = MahsanList.ToArray();
+            switch (table_sort)
+            {
+                case 0:
+                    Array.Sort(temp, Country.CompareByNames);
+                    break;
+                case 1:
+                    Array.Sort(temp, Country.CompareByDate);
+                    break;
+                case 2:
+                    Array.Sort(temp, Country.CompareByAccuracy);
+                    break;
+                default:
+                    break;
+            }
+            MahsanList.Clear();
+            MahsanList.AddRange(temp);
+            intializeCountries();
+        }
+
     }
 }

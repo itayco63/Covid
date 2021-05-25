@@ -2,6 +2,7 @@
 using LiveCharts.Wpf;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text;
 using static Covid.CountryStatusEnum;
 
@@ -9,7 +10,7 @@ namespace Covid
 {
     public class Country
     {
-        public Country(string name, CountryStatus status, ChartValues<double> reportedCv, ChartValues<double> predictedCv, List<string> new_dates)
+        public Country(string name, CountryStatus status, ChartValues<double> reportedCv, ChartValues<double> predictedCv, List<string> new_dates,double daviation)
         {
             Name = name;
             Status = status;
@@ -22,6 +23,7 @@ namespace Covid
             predictionSeries = new LineSeries();
             predictionSeries.Values = predictedCv;
             predictionSeries.Title = "predicted";
+            accurate = daviation;
         }
         public Country()
         {
@@ -35,10 +37,42 @@ namespace Covid
         public string From { get; set; }
         public string To { get; set; }
         public CountryStatus Status { get; set;}
-        public int NumSickPeople { get; set; }
+        public double accurate { get; set; }
 
         public LineSeries reportedSeries { get; set; }
         public LineSeries predictionSeries { get; set; }
-    }
 
+        public static int CompareByNames(Country x, Country y)
+        {
+            return String.Compare(x.Name, y.Name);
+        }
+        public static int CompareByDate(Country x, Country y)
+        {
+            /*if (DateTime.Parse(x.dates[0], CultureInfo.InvariantCulture) <= DateTime.Parse(y.dates[0], CultureInfo.InvariantCulture))
+            {
+                return -1;
+            }
+            else
+            {
+                return 1;
+            }*/
+            return String.Compare(x.From, y.From);
+
+
+        }
+        public static int CompareByAccuracy(Country x, Country y)
+        {
+            if (x.accurate - y.accurate >= 0)
+            {
+                return 1;
+            }
+            else
+            {
+                return -1;
+            }
+        }
+
+    }
 }
+
+
