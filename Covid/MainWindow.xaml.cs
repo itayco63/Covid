@@ -118,18 +118,6 @@ namespace Covid
         //////
 
 
-        //////load items from Json file
-        public void LoadJson()
-        {
-            using (StreamReader r = new StreamReader("validation.json"))
-            {
-                string json = r.ReadToEnd();
-                items = JsonConvert.DeserializeObject<List<Root>>(json);
-            }
-
-        }
-        //////
-
 
 
         /////presenting full list
@@ -196,14 +184,30 @@ namespace Covid
 
         //////
 
+        
+        
+       
+        
+        //////load items from Json file
+        public void LoadJson()
+        {
+            using (StreamReader r = new StreamReader(@"C:\Users\itayc\source\repos\Covid\Covid\validation.json"))
+            {
+                string json = r.ReadToEnd();
+                items = JsonConvert.DeserializeObject<List<Root>>(json);
+            }
+
+        }
+        //////
+
 
 
 
         //////run python file
         private static void doPython()
         {
-            var ipy = Python.CreateRuntime();
-            ipy.ExecuteFile("main.py");
+            String strCmdText = @"C:\Users\itayc\source\repos\Covid\Covid\main.py";
+            System.Diagnostics.Process.Start("python.exe", strCmdText);
         }
         ///////
 
@@ -213,7 +217,7 @@ namespace Covid
         //////runing prediction and filling table
         private void Run_prediction(object sender, RoutedEventArgs e)
         {
-            //doPython();
+            doPython();
             string name;
             List<double> infections;
             List<double> predictions;
@@ -258,6 +262,7 @@ namespace Covid
             total_bad.Content = "Total bad data: " + numOfBad + "  " + badPrec + "%";
             total_sus.Content = "Total suspected trends: " + numOfSuspect + "  " + susPrec + "%";
             total_good.Content = "Total good trends: " + numOfGood + "  " + goodPrec + "%";
+            
         }
 
 

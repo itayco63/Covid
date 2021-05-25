@@ -1,7 +1,7 @@
 import getopt
 import sys
 
-import geopandas as gpd
+
 import numpy as np
 import pandas as pd
 import tensorflow as tf
@@ -11,6 +11,7 @@ from tensorflow.keras import layers
 from tensorflow.keras.callbacks import ModelCheckpoint, ReduceLROnPlateau, EarlyStopping
 from tensorflow.keras.models import Model
 from tqdm import tqdm
+import geopandas as gpd
 
 sequence_length = 20
 best_model_file_path = 'best_model.h5'
