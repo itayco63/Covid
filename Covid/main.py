@@ -1,6 +1,6 @@
 import getopt
 import sys
-
+import os
 
 import numpy as np
 import pandas as pd
@@ -14,20 +14,22 @@ from tqdm import tqdm
 import geopandas as gpd
 
 sequence_length = 20
-best_model_file_path = 'best_model.h5'
-trend_df_file_path = 'trend_df.pkl'
-validation_file_path = 'validation.json'
+train_df_file_path = 'Covid\\covid19-global-forecasting-week-4.csv'
+extra_data_file_path = 'Covid\\enriched_covid_19_week_2.csv'
+best_model_file_path = 'Covid\\best_model.h5'
+trend_df_file_path = 'Covid\\trend_df.pkl'
+validation_file_path = 'Covid\\validation.json'
 
 
 def prep_data():
     # Get cases data up till mid May
-    train_df = gpd.read_file("E:/Apps/COVID/kaggle/input/covid19-global-forecasting-week-4/train.csv")
+    train_df = gpd.read_file(str(os.getcwd()+'\\'+train_df_file_path))
     train_df["ConfirmedCases"] = train_df["ConfirmedCases"].astype("float")
     train_df["Country_Region"] = [row.Country_Region.replace("'", "").strip(" ") if row.Province_State == "" else str(
         row.Country_Region + "_" + row.Province_State).replace("'", "").strip(" ") for idx, row in train_df.iterrows()]
 
     # Get countries data
-    extra_data_df = gpd.read_file("E:/Apps/COVID//kaggle/input/enriched-covid-19-week2/enriched_covid_19_week_2.csv")
+    extra_data_df = gpd.read_file(str(os.getcwd()+'\\'+extra_data_file_path))
     extra_data_df["Country_Region"] = [country_name.replace("'", "") for country_name in
                                        extra_data_df["Country_Region"]]
     extra_data_df["restrictions"] = extra_data_df["restrictions"].astype("int")
@@ -164,7 +166,7 @@ def prep_data():
     trend_df = temp_df
     trend_df.index = np.arange(0, len(trend_df))
 
-    trend_df.to_pickle(trend_df_file_path)
+    trend_df.to_pickle(os.getcwd()+'\\'+trend_df_file_path)
 
     return trend_df
 
@@ -254,7 +256,7 @@ def train_model(model, X_temporal_train, X_demographic_train, Y_cases_train, X_t
                 X_demographic_test, Y_cases_test):
     callbacks = [ReduceLROnPlateau(monitor='val_loss', patience=4, verbose=1, factor=0.6),
                  EarlyStopping(monitor='val_loss', patience=20),
-                 ModelCheckpoint(filepath=best_model_file_path, monitor='val_loss', save_best_only=True)]
+                 ModelCheckpoint(filepath=os.getcwd()+'\\'+best_model_file_path, monitor='val_loss', save_best_only=True)]
     model.compile(loss=[tf.keras.losses.MeanSquaredLogarithmicError(), tf.keras.losses.MeanSquaredLogarithmicError()],
                   optimizer="adam")
     history = model.fit([X_temporal_train, X_demographic_train], [Y_cases_train],
@@ -265,11 +267,11 @@ def train_model(model, X_temporal_train, X_demographic_train, Y_cases_train, X_t
 
 
 def gen_prediction(model, X_temporal_test, X_demographic_test, best_model_file_path, validation_df):
-    model.load_weights(str(best_model_file_path))
+    model.load_weights(str(os.getcwd()+'\\'+best_model_file_path))
     predictions = model.predict([X_temporal_test, X_demographic_test])
 
     validation_df['Prediction'] = predictions
-    validation_df.to_json(validation_file_path, orient='records')
+    validation_df.to_json(os.getcwd()+'\\'+validation_file_path, orient='records')
 
 
 #################################### Main: ###############################
@@ -293,7 +295,7 @@ for current_argument, current_value in arguments:
 
 if map_trends:
     prep_data()
-trend_df = pd.read_pickle(trend_df_file_path)
+trend_df = pd.read_pickle(os.getcwd()+'\\'+trend_df_file_path)
 X_temporal_train, X_demographic_train, Y_cases_train, X_temporal_test, X_demographic_test, Y_cases_test,\
 test_countries_name, train_dates, test_dates, validation_df = split_training_validation(
     trend_df)
