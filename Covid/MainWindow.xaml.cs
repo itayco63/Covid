@@ -213,7 +213,7 @@ namespace Covid
         //////runing prediction and filling table
         private void Run_prediction(object sender, RoutedEventArgs e)
         {
-            doPython();
+            //doPython();
             string name;
             List<double> infections;
             List<double> predictions;
