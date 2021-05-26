@@ -197,15 +197,16 @@ namespace Covid
 
                 SeriesCollection = new SeriesCollection
                 {
-                new LineSeries
-                {
-                    Title = SelectedCountry.reportedSeries.Title,
-                    Values = SelectedCountry.reportedSeries.Values,
-                },
+                
                  new LineSeries
                 {
                     Title = SelectedCountry.predictionSeries.Title,
                     Values = SelectedCountry.predictionSeries.Values,
+                },
+                 new LineSeries
+                {
+                    Title = SelectedCountry.reportedSeries.Title,
+                    Values = SelectedCountry.reportedSeries.Values,
                 },
                 };
 
@@ -280,7 +281,7 @@ namespace Covid
         private void Run_prediction(object sender, RoutedEventArgs e)
         {
             reset();
-            doPython();
+            //doPython();
             string name;
             List<double> infections;
             List<double> predictions;
