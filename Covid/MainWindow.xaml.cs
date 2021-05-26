@@ -176,8 +176,19 @@ namespace Covid
             {
                 SelectedCountry = tempCountry;
 
-                country.Visibility = Visibility.Visible;
+                
                 country.Content = "Country: " + SelectedCountry.Name;
+                from.Content = "From: " + SelectedCountry.From;
+                to.Content = "To: " + SelectedCountry.To;
+                deviation.Content = "Deviation: " + SelectedCountry.accurate+"%";
+                countryStatus.Content = "Status: " + SelectedCountry.Status;
+
+                chart.Visibility = Visibility.Visible;
+                country.Visibility = Visibility.Visible;
+                from.Visibility = Visibility.Visible;
+                to.Visibility = Visibility.Visible;
+                deviation.Visibility = Visibility.Visible;
+                countryStatus.Visibility = Visibility.Visible;
                 if (chart.Visibility == Visibility.Hidden)
                 {
                     chart.Visibility = Visibility.Visible;
@@ -199,7 +210,7 @@ namespace Covid
                 };
 
                 Labels = SelectedCountry.dates.ToArray();
-                YFormatter = value => value.ToString();
+                YFormatter = value => Math.Round(value,2).ToString();
                 DataContext = this;
 
             }
@@ -207,7 +218,11 @@ namespace Covid
             {
                 chart.Visibility = Visibility.Hidden;
                 country.Visibility = Visibility.Hidden;
-                
+                from.Visibility = Visibility.Hidden;
+                to.Visibility = Visibility.Hidden;
+                deviation.Visibility = Visibility.Hidden;
+                countryStatus.Visibility = Visibility.Hidden;
+
             }
         }
 
@@ -236,7 +251,15 @@ namespace Covid
         //////run python file
         private void doPython()
         {
-            string strCmdText = path + @"\" + "main.py";
+            string strCmdText;
+            if (train.IsChecked == true)
+            {
+                strCmdText = path + @"\main.py -t";
+            }
+            else
+            {
+                strCmdText = path + @"\main.py";
+            }
             Process p = Process.Start("python.exe", strCmdText);
             p.WaitForExit();
 
@@ -257,7 +280,7 @@ namespace Covid
         private void Run_prediction(object sender, RoutedEventArgs e)
         {
             reset();
-            //doPython();
+            doPython();
             string name;
             List<double> infections;
             List<double> predictions;
@@ -266,7 +289,7 @@ namespace Covid
             LoadJson();
 
             Root[] temp = items.ToArray();              //move to array and sort by names
-            //MahsanList.Add(new Country());
+            
             Array.Sort(temp, Root.CompareByNames);
             int len = temp.Length;
 
@@ -278,13 +301,18 @@ namespace Covid
                 predictions.Add(temp[i].Prediction);
                 infections = temp[i].infection_trend;
                 infections.Add(temp[i].expected_cases);
+                for(int j = 0; j < infections.Count; j++)
+                {
+                    infections[j] = Math.Round(infections[j]);
+                    predictions[j] = Math.Round(predictions[j]);
+                }
                 new_dates = temp[i].dates;
 
                 exp = temp[i].expected_cases;
                 pred = temp[i].Prediction;
                 lastDay = temp[i].infection_trend[infections.Count - 2];
                 daviation = (((pred - exp) / pred) * 100);
-                MahsanList.Add(new Country(name, getStatus(daviation,lastDay, pred, exp), new ChartValues<double>(infections), new ChartValues<double>(predictions), new_dates, Math.Round(daviation)));
+                MahsanList.Add(new Country(name, getStatus(daviation,lastDay, pred, exp), new ChartValues<double>(infections), new ChartValues<double>(predictions), new_dates, Math.Round(daviation,2)));
 
             }
             intializeCountries();                                       //putting items in present list
@@ -408,7 +436,14 @@ namespace Covid
         }
         private void sortAcur(object sender, RoutedEventArgs e)
         {
-            table_sort = 2;
+            if(table_sort == 2)
+            {
+                table_sort = 3;
+            }
+            else
+            {
+                table_sort = 2;
+            }
             sortTable();
         }
         
@@ -424,7 +459,10 @@ namespace Covid
                     Array.Sort(temp, Country.CompareByDate);
                     break;
                 case 2:
-                    Array.Sort(temp, Country.CompareByAccuracy);
+                    Array.Sort(temp, Country.CompareByAccuracyDown);
+                    break;
+                case 3:
+                    Array.Sort(temp, Country.CompareByAccuracyUP);
                     break;
                 default:
                     break;

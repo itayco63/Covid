@@ -4,6 +4,6 @@
              xmlns:local="clr-namespace:Covid"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-         
+        <ResourceDictionary Source="Styles.xaml"/>
     </Application.Resources>
 </Application>

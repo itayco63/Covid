@@ -60,7 +60,7 @@ namespace Covid
 
 
         }
-        public static int CompareByAccuracy(Country x, Country y)
+        public static int CompareByAccuracyUP(Country x, Country y)
         {
             if (x.accurate - y.accurate >= 0)
             {
@@ -71,7 +71,17 @@ namespace Covid
                 return -1;
             }
         }
-
+        public static int CompareByAccuracyDown(Country x, Country y)
+        {
+            if (x.accurate - y.accurate >= 0)
+            {
+                return -1;
+            }
+            else
+            {
+                return 1;
+            }
+        }
     }
 }
 
