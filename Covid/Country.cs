@@ -25,13 +25,7 @@ namespace Covid
             predictionSeries.Title = "predicted";
             accurate = daviation;
         }
-        public Country()
-        {
-            Name = "Country:";
-            Status = CountryStatus.Status;           
-            From = "From:";
-            To ="To:";
-        }
+        
         public string Name { get; set; }
         public List<string> dates { get; set; }
         public string From { get; set; }
@@ -46,20 +40,12 @@ namespace Covid
         {
             return String.Compare(x.Name, y.Name);
         }
+
         public static int CompareByDate(Country x, Country y)
-        {
-            /*if (DateTime.Parse(x.dates[0], CultureInfo.InvariantCulture) <= DateTime.Parse(y.dates[0], CultureInfo.InvariantCulture))
-            {
-                return -1;
-            }
-            else
-            {
-                return 1;
-            }*/
+        {         
             return String.Compare(x.From, y.From);
-
-
         }
+
         public static int CompareByAccuracyUP(Country x, Country y)
         {
             if (x.accurate - y.accurate >= 0)
@@ -71,6 +57,7 @@ namespace Covid
                 return -1;
             }
         }
+
         public static int CompareByAccuracyDown(Country x, Country y)
         {
             if (x.accurate - y.accurate >= 0)

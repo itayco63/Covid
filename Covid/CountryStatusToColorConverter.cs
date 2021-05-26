@@ -18,11 +18,7 @@ namespace Covid
                 case CountryStatus.Suspect:
                     return Brushes.Red;
                 case CountryStatus.Regular:
-                    return Brushes.LimeGreen;
-                case CountryStatus.Status:
-                    return Brushes.Black;
-                case CountryStatus.badData:
-                    return Brushes.Blue;
+                    return Brushes.LimeGreen;                         
                 default:
                     return Brushes.Yellow;
             }

@@ -6,6 +6,6 @@ namespace Covid
 {
     public class CountryStatusEnum
     {
-        public enum CountryStatus { Regular, Suspect, Status ,badData }
+        public enum CountryStatus { Regular, Suspect }
     }
 }

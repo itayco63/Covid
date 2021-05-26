@@ -27,10 +27,13 @@ namespace Covid
         private List<Country> MahsanList = new List<Country>(); //full cuntries list
         List<Root> items; //items from Json file
         public event PropertyChangedEventHandler PropertyChanged;
-        int numOfGood, numOfSuspect, numOfBad;
+        int numOfGood, numOfSuspect;
         private const string validation_file = "validation.json";
         private string path;
         int table_sort = -1;
+
+
+
         //////graph handling
 
         public Func<double, string> YFormatter { get; set; }
@@ -81,31 +84,6 @@ namespace Covid
             {
                 return String.Compare(x.country_name, y.country_name);
             }
-            public static int CompareByDate(Root x, Root y)
-            {
-                if (DateTime.Parse(x.dates[0], CultureInfo.InvariantCulture) <= DateTime.Parse(y.dates[0], CultureInfo.InvariantCulture))
-                {
-                    return - 1;               
-                }
-                else
-                {
-                    return 1;
-                }
-
-
-            }
-            public static int CompareByAccuracy(Root x, Root y)
-            {
-                if (DateTime.Parse(x.dates[0], CultureInfo.InvariantCulture) <= DateTime.Parse(y.dates[0], CultureInfo.InvariantCulture))
-                {
-                    return -1;
-                }
-                else
-                {
-                    return 1;
-                }
-            }
-
         }
         ///////
 
@@ -138,7 +116,7 @@ namespace Covid
             InitializeComponent();
             DataContext = this;
             Countries = new ObservableCollection<Country>();
-            numOfBad = 0;
+
             numOfSuspect = 0;
             numOfGood = 0;
             path = System.IO.Directory.GetCurrentDirectory();
@@ -147,14 +125,12 @@ namespace Covid
         //////
 
 
-
-
         /////presenting full list
 
-        private void intializeCountries()
+        private void intializeCountries(List<Country> countries )
         {
             Countries.Clear();
-            foreach (var country in MahsanList)
+            foreach (var country in countries)
             {
                 Countries.Add(country);
             }
@@ -172,32 +148,25 @@ namespace Covid
 
             var selected = sender as ListViewItem;
             Country tempCountry = selected.Content as Country;
-            if (!tempCountry.Name.Equals("Country:") && !tempCountry.Status.Equals(CountryStatusEnum.CountryStatus.badData))
+
+            SelectedCountry = tempCountry;
+
+
+            country.Content = "Country: " + SelectedCountry.Name;
+            from.Content = "From: " + SelectedCountry.From;
+            to.Content = "To: " + SelectedCountry.To;
+            deviation.Content = "Deviation: " + SelectedCountry.accurate + "%";
+            countryStatus.Content = "Status: " + SelectedCountry.Status;
+
+            if (chart.Visibility == Visibility.Hidden)
             {
-                SelectedCountry = tempCountry;
-
-                
-                country.Content = "Country: " + SelectedCountry.Name;
-                from.Content = "From: " + SelectedCountry.From;
-                to.Content = "To: " + SelectedCountry.To;
-                deviation.Content = "Deviation: " + SelectedCountry.accurate+"%";
-                countryStatus.Content = "Status: " + SelectedCountry.Status;
-
                 chart.Visibility = Visibility.Visible;
-                country.Visibility = Visibility.Visible;
-                from.Visibility = Visibility.Visible;
-                to.Visibility = Visibility.Visible;
-                deviation.Visibility = Visibility.Visible;
-                countryStatus.Visibility = Visibility.Visible;
-                if (chart.Visibility == Visibility.Hidden)
-                {
-                    chart.Visibility = Visibility.Visible;
-                }
+            }
 
 
-                SeriesCollection = new SeriesCollection
+            SeriesCollection = new SeriesCollection
                 {
-                
+
                  new LineSeries
                 {
                     Title = SelectedCountry.predictionSeries.Title,
@@ -210,25 +179,13 @@ namespace Covid
                 },
                 };
 
-                Labels = SelectedCountry.dates.ToArray();
-                YFormatter = value => Math.Round(value,2).ToString();
-                DataContext = this;
+            Labels = SelectedCountry.dates.ToArray();
+            YFormatter = value => Math.Round(value, 2).ToString();
+            DataContext = this;
 
-            }
-            else
-            {
-                chart.Visibility = Visibility.Hidden;
-                country.Visibility = Visibility.Hidden;
-                from.Visibility = Visibility.Hidden;
-                to.Visibility = Visibility.Hidden;
-                deviation.Visibility = Visibility.Hidden;
-                countryStatus.Visibility = Visibility.Hidden;
-
-            }
         }
 
         //////
-
 
 
 
@@ -273,10 +230,10 @@ namespace Covid
             MahsanList.Clear();
             numOfGood = 0;
             numOfSuspect = 0;
-            numOfBad=0;
+
         }
 
-        
+
         //////runing prediction and filling table
         private void Run_prediction(object sender, RoutedEventArgs e)
         {
@@ -286,11 +243,11 @@ namespace Covid
             List<double> infections;
             List<double> predictions;
             List<string> new_dates;
-            double daviation, lastDay, pred, exp, badPrec, goodPrec, susPrec;
+            double daviation, lastDay, pred, exp, goodPrec, susPrec;
             LoadJson();
 
             Root[] temp = items.ToArray();              //move to array and sort by names
-            
+
             Array.Sort(temp, Root.CompareByNames);
             int len = temp.Length;
 
@@ -302,7 +259,7 @@ namespace Covid
                 predictions.Add(temp[i].Prediction);
                 infections = temp[i].infection_trend;
                 infections.Add(temp[i].expected_cases);
-                for(int j = 0; j < infections.Count; j++)
+                for (int j = 0; j < infections.Count; j++)
                 {
                     infections[j] = Math.Round(infections[j]);
                     predictions[j] = Math.Round(predictions[j]);
@@ -313,10 +270,12 @@ namespace Covid
                 pred = temp[i].Prediction;
                 lastDay = temp[i].infection_trend[infections.Count - 2];
                 daviation = (((pred - exp) / pred) * 100);
-                MahsanList.Add(new Country(name, getStatus(daviation,lastDay, pred, exp), new ChartValues<double>(infections), new ChartValues<double>(predictions), new_dates, Math.Round(daviation,2)));
-
+                if (!(lastDay > pred))
+                {
+                    MahsanList.Add(new Country(name, getStatus(daviation, lastDay, pred, exp), new ChartValues<double>(infections), new ChartValues<double>(predictions), new_dates, Math.Round(daviation, 2)));
+                }
             }
-            intializeCountries();                                       //putting items in present list
+            intializeCountries(MahsanList);                                       //putting items in present list
             countriesList.Visibility = Visibility.Visible;
             Mark_Ok.Visibility = Visibility.Visible;
             Mark_sus.Visibility = Visibility.Visible;
@@ -324,17 +283,14 @@ namespace Covid
             byAcur.Visibility = Visibility.Visible;
             byDate.Visibility = Visibility.Visible;
             byName.Visibility = Visibility.Visible;
+            len = MahsanList.Count;
 
-
-            goodPrec = (double)numOfGood / len * 100;                     //calculating statistics
-            badPrec = (double)numOfBad / len * 100;
+            goodPrec = (double)numOfGood / len * 100;                     //calculating statistics           
             susPrec = (double)numOfSuspect / len * 100;
             goodPrec = Math.Round(goodPrec, 2);
-            badPrec = Math.Round(badPrec, 2);
             susPrec = Math.Round(susPrec, 2);
 
-            Total.Content = "Total trends: " + temp.Length;                                         //showing statistics
-            total_bad.Content = "Total bad data: " + numOfBad + "  ->  " + badPrec + "%";
+            Total.Content = "Total trends: " + len;                                         //showing statistics
             total_sus.Content = "Total suspected trends: " + numOfSuspect + "  ->  " + susPrec + "%";
             total_good.Content = "Total good trends: " + numOfGood + "  ->  " + goodPrec + "%";
 
@@ -344,19 +300,11 @@ namespace Covid
         ////////
 
 
-
         private CountryStatusEnum.CountryStatus getStatus(double daviation, double lastDay, double pred, double exp)      //get status of trend
         {
-            
 
-            if (lastDay > pred && daviation < -10)            //check if bad descending
-            {
-                numOfBad++;
-                return CountryStatusEnum.CountryStatus.badData;
-            }
-
-            else if (10 < pred - exp && daviation > 5)            //check if bad ascending
-            {
+            if (10 < pred - exp && daviation > 5)               //check if suspect
+            {          
                 numOfSuspect++;
                 return CountryStatusEnum.CountryStatus.Suspect;
 
@@ -378,7 +326,7 @@ namespace Covid
             int len = Countries.Count;
             for (int i = len - 1; i >= 0; i--)
             {
-                if (!(Countries[i].Status.Equals(CountryStatusEnum.CountryStatus.Regular) || Countries[i].Status.Equals(CountryStatusEnum.CountryStatus.Status)))
+                if (!Countries[i].Status.Equals(CountryStatusEnum.CountryStatus.Regular))
                 {
                     Countries.Remove(Countries[i]);
 
@@ -398,7 +346,7 @@ namespace Covid
             int len = Countries.Count;
             for (int i = len - 1; i >= 0; i--)
             {
-                if (!(Countries[i].Status.Equals(CountryStatusEnum.CountryStatus.Suspect) || Countries[i].Status.Equals(CountryStatusEnum.CountryStatus.Status)))
+                if (!Countries[i].Status.Equals(CountryStatusEnum.CountryStatus.Suspect))
                 {
                     Countries.Remove(Countries[i]);
 
@@ -416,7 +364,7 @@ namespace Covid
 
         private void Unchecked(object sender, RoutedEventArgs e)
         {
-            intializeCountries();
+            intializeCountries(MahsanList);
             Mark_Ok.IsEnabled = true;
             Mark_sus.IsEnabled = true;
         }
@@ -437,7 +385,7 @@ namespace Covid
         }
         private void sortAcur(object sender, RoutedEventArgs e)
         {
-            if(table_sort == 2)
+            if (table_sort == 2)
             {
                 table_sort = 3;
             }
@@ -447,10 +395,12 @@ namespace Covid
             }
             sortTable();
         }
-        
+
         public void sortTable()
         {
-            Country[] temp = MahsanList.ToArray();
+
+            Country[] temp= new Country[Countries.Count]; 
+            Countries.CopyTo(temp,0);
             switch (table_sort)
             {
                 case 0:
@@ -468,9 +418,7 @@ namespace Covid
                 default:
                     break;
             }
-            MahsanList.Clear();
-            MahsanList.AddRange(temp);
-            intializeCountries();
+            intializeCountries(new List<Country>(temp));
         }
 
     }
