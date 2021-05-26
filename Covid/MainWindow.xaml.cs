@@ -364,6 +364,28 @@ namespace Covid
 
         private void Unchecked(object sender, RoutedEventArgs e)
         {
+            
+            Country[] temp = new Country[MahsanList.Count];
+            MahsanList.CopyTo(temp, 0);
+            switch (table_sort)
+            {
+                case 0:
+                    Array.Sort(temp, Country.CompareByNames);
+                    break;
+                case 1:
+                    Array.Sort(temp, Country.CompareByDate);
+                    break;
+                case 2:
+                    Array.Sort(temp, Country.CompareByAccuracyDown);
+                    break;
+                case 3:
+                    Array.Sort(temp, Country.CompareByAccuracyUP);
+                    break;
+                default:
+                    break;
+            }
+            MahsanList.Clear();
+            MahsanList.AddRange(temp);
             intializeCountries(MahsanList);
             Mark_Ok.IsEnabled = true;
             Mark_sus.IsEnabled = true;
