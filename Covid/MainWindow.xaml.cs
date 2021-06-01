@@ -272,7 +272,7 @@ namespace Covid
                 daviation = (((pred - exp) / pred) * 100);
                 if (!(lastDay > pred))
                 {
-                    MahsanList.Add(new Country(name, getStatus(daviation, lastDay, pred, exp), new ChartValues<double>(infections), new ChartValues<double>(predictions), new_dates, Math.Round(daviation, 2)));
+                    MahsanList.Add(new Country(name, getStatus(daviation, pred, exp), new ChartValues<double>(infections), new ChartValues<double>(predictions), new_dates, Math.Round(daviation, 2)));
                 }
             }
             intializeCountries(MahsanList);                                       //putting items in present list
@@ -300,7 +300,7 @@ namespace Covid
         ////////
 
 
-        private CountryStatusEnum.CountryStatus getStatus(double daviation, double lastDay, double pred, double exp)      //get status of trend
+        private CountryStatusEnum.CountryStatus getStatus(double daviation, double pred, double exp)      //get status of trend
         {
 
             if (10 < pred - exp && daviation > 5)               //check if suspect
