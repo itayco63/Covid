@@ -238,7 +238,7 @@ namespace Covid
         private void Run_prediction(object sender, RoutedEventArgs e)
         {
             reset();
-            //doPython();
+            doPython();
             string name;
             List<double> infections;
             List<double> predictions;
