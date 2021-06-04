@@ -145,7 +145,7 @@ namespace Covid
 
         private void ListViewItem_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-
+            int size;
             var selected = sender as ListViewItem;
             Country tempCountry = selected.Content as Country;
 
@@ -157,7 +157,9 @@ namespace Covid
             to.Content = "To: " + SelectedCountry.To;
             deviation.Content = "Deviation: " + SelectedCountry.accurate + "%";
             countryStatus.Content = "Status: " + SelectedCountry.Status;
-
+            size=SelectedCountry.reportedSeries.Values.Count;
+            reported.Content = "Reported: " + SelectedCountry.reportedSeries.Values[size-1];
+            predicted.Content = "Predicted: " + SelectedCountry.predictionSeries.Values[size - 1];
             if (chart.Visibility == Visibility.Hidden)
             {
                 chart.Visibility = Visibility.Visible;
@@ -370,16 +372,22 @@ namespace Covid
             switch (table_sort)
             {
                 case 0:
-                    Array.Sort(temp, Country.CompareByNames);
+                    Array.Sort(temp, Country.CompareByNamesUP);
                     break;
                 case 1:
-                    Array.Sort(temp, Country.CompareByDate);
+                    Array.Sort(temp, Country.CompareByNamesDown);
                     break;
                 case 2:
-                    Array.Sort(temp, Country.CompareByAccuracyDown);
+                    Array.Sort(temp, Country.CompareByDateUP);
                     break;
                 case 3:
+                    Array.Sort(temp, Country.CompareByDateDown);
+                    break;
+                case 4:
                     Array.Sort(temp, Country.CompareByAccuracyUP);
+                    break;
+                case 5:
+                    Array.Sort(temp, Country.CompareByAccuracyDown);
                     break;
                 default:
                     break;
@@ -397,16 +405,21 @@ namespace Covid
 
         private void sortName(object sender, RoutedEventArgs e)
         {
-            table_sort = 0;
+           
+            if (table_sort == 0)
+            {
+                table_sort = 1;
+            }
+            else
+            {
+                table_sort = 0;
+            }
             sortTable();
+
         }
         private void sortDate(object sender, RoutedEventArgs e)
         {
-            table_sort = 1;
-            sortTable();
-        }
-        private void sortAcur(object sender, RoutedEventArgs e)
-        {
+           
             if (table_sort == 2)
             {
                 table_sort = 3;
@@ -414,6 +427,18 @@ namespace Covid
             else
             {
                 table_sort = 2;
+            }
+            sortTable();
+        }
+        private void sortAcur(object sender, RoutedEventArgs e)
+        {
+            if (table_sort == 4)
+            {
+                table_sort = 5;
+            }
+            else
+            {
+                table_sort = 4;
             }
             sortTable();
         }
@@ -426,16 +451,22 @@ namespace Covid
             switch (table_sort)
             {
                 case 0:
-                    Array.Sort(temp, Country.CompareByNames);
+                    Array.Sort(temp, Country.CompareByNamesUP);
                     break;
                 case 1:
-                    Array.Sort(temp, Country.CompareByDate);
+                    Array.Sort(temp, Country.CompareByNamesDown);
                     break;
                 case 2:
-                    Array.Sort(temp, Country.CompareByAccuracyDown);
+                    Array.Sort(temp, Country.CompareByDateUP);
                     break;
                 case 3:
+                    Array.Sort(temp, Country.CompareByDateDown);
+                    break;
+                case 4:
                     Array.Sort(temp, Country.CompareByAccuracyUP);
+                    break;
+                case 5:
+                    Array.Sort(temp, Country.CompareByAccuracyDown);
                     break;
                 default:
                     break;

@@ -96,6 +96,8 @@
                 <Label Name="to"  HorizontalContentAlignment="Left"/>
                 <Label Name="deviation" HorizontalContentAlignment="Left" />
                 <Label Name="countryStatus" HorizontalContentAlignment="Left" />
+                <Label Name="reported" HorizontalContentAlignment="Left" />
+                <Label Name="predicted" HorizontalContentAlignment="Left" />
             </StackPanel>
             <StackPanel Grid.Row="3" Grid.Column="1" Orientation="Vertical" VerticalAlignment="Bottom">
                

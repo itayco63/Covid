@@ -36,14 +36,22 @@ namespace Covid
         public LineSeries reportedSeries { get; set; }
         public LineSeries predictionSeries { get; set; }
 
-        public static int CompareByNames(Country x, Country y)
+        public static int CompareByNamesUP(Country x, Country y)
         {
             return String.Compare(x.Name, y.Name);
         }
+        public static int CompareByNamesDown(Country x, Country y)
+        {
+            return -1*String.Compare(x.Name, y.Name);
+        }
 
-        public static int CompareByDate(Country x, Country y)
+        public static int CompareByDateUP(Country x, Country y)
         {         
             return String.Compare(x.From, y.From);
+        }
+        public static int CompareByDateDown(Country x, Country y)
+        {
+            return -1*String.Compare(x.From, y.From);
         }
 
         public static int CompareByAccuracyUP(Country x, Country y)
