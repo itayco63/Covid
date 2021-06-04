@@ -38,7 +38,7 @@
                                 <ColumnDefinition Width="70"/>
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
-                            <Label Grid.Column="0" Content="{Binding Name}" HorizontalContentAlignment="Left" Foreground="{Binding Status, Converter={StaticResource CountryStatusToColorConverter}}" />
+                            <TextBlock Grid.Column="0" Text="{Binding Name}" HorizontalAlignment="Left" Foreground="{Binding Status, Converter={StaticResource CountryStatusToColorConverter}}" />
                             <Label Grid.Column="1" Content="{Binding From}" HorizontalContentAlignment="Left" Foreground="{Binding Status, Converter={StaticResource CountryStatusToColorConverter}}" />
                             <Label Grid.Column="2" Content="{Binding To}" HorizontalContentAlignment="Left" Foreground="{Binding Status, Converter={StaticResource CountryStatusToColorConverter}}" />
                             <TextBlock Grid.Column="3" VerticalAlignment="Center" Text="{Binding accurate, StringFormat={}{0}%}" HorizontalAlignment="Left" Foreground="{Binding Status, Converter={StaticResource CountryStatusToColorConverter}}" />
@@ -91,7 +91,7 @@
             <CheckBox Name ="train" Content="Train network"  HorizontalAlignment="Center" Height="15" VerticalAlignment="Top" Grid.Row="2" Grid.ColumnSpan="2" Margin="0,20,0,0"  />
             <StackPanel Grid.Row="3" Grid.Column="1" Orientation="Vertical" VerticalAlignment="Top">
 
-                <Label Name="country" HorizontalContentAlignment="Left"/>
+                <TextBlock Name="country" HorizontalAlignment="Left"/>
                 <Label Name="from"  HorizontalContentAlignment="Left"/>
                 <Label Name="to"  HorizontalContentAlignment="Left"/>
                 <Label Name="deviation" HorizontalContentAlignment="Left" />

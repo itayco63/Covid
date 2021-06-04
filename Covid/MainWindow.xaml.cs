@@ -152,7 +152,7 @@ namespace Covid
             SelectedCountry = tempCountry;
 
 
-            country.Content = "Country: " + SelectedCountry.Name;
+            country.Text = "Country: " + SelectedCountry.Name;
             from.Content = "From: " + SelectedCountry.From;
             to.Content = "To: " + SelectedCountry.To;
             deviation.Content = "Deviation: " + SelectedCountry.accurate + "%";
@@ -247,7 +247,6 @@ namespace Covid
             List<string> new_dates;
             double daviation, lastDay, pred, exp, goodPrec, susPrec;
             LoadJson();
-
             Root[] temp = items.ToArray();              //move to array and sort by names
 
             Array.Sort(temp, Root.CompareByNames);
@@ -272,6 +271,7 @@ namespace Covid
                 pred = temp[i].Prediction;
                 lastDay = temp[i].infection_trend[infections.Count - 2];
                 daviation = (((pred - exp) / pred) * 100);
+               
                 if (!(lastDay > pred))
                 {
                     MahsanList.Add(new Country(name, getStatus(daviation, pred, exp), new ChartValues<double>(infections), new ChartValues<double>(predictions), new_dates, Math.Round(daviation, 2)));
