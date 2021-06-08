@@ -19,10 +19,10 @@ namespace Covid
             To = dates[dates.Count - 1];
             reportedSeries = new LineSeries();
             reportedSeries.Values = reportedCv;
-            reportedSeries.Title = "reported";
+            reportedSeries.Title = "Reported";
             predictionSeries = new LineSeries();
             predictionSeries.Values = predictedCv;
-            predictionSeries.Title = "predicted";
+            predictionSeries.Title = "Predicted";
             accurate = daviation;
         }
         
