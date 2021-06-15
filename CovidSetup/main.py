@@ -192,7 +192,8 @@ def split_training_validation(trend_df):
         else:
             tmp_df = tmp_df.append(row)
 
-    tmp_df = shuffle(tmp_df)
+    #tmp_df = shuffle(tmp_df)
+    tmp_df = tmp_df.sample(n=tmp_df.shape[0], random_state=1)
 
     # Add more random 10% to validation to get ~20% validation, 80% training
     training_percentage = 0.9

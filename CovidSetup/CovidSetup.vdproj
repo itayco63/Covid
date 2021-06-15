@@ -15,19 +15,13 @@
     {
         "Entry"
         {
-        "MsmKey" = "8:_1D0C777DE14C4F82B0DFFBCBF05E9535"
+        "MsmKey" = "8:_34E92A8202034CD799DEA83ED0A54ABE"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_2437274D27CA481CB1ABC846369C633B"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_6DEB270DE2AD42A8871F687B89AC31D1"
+        "MsmKey" = "8:_6973E402A5E5428D980FC6E4B5477A55"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -39,13 +33,19 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_CC32AB48DC4C423EA9D5B49BADBDF5C3"
+        "MsmKey" = "8:_B6042D89B65D4D53B5547534808248A3"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_E3AF4477D3104362892DE9725BE2D3C2"
+        "MsmKey" = "8:_C0C859B764F04CF68D6F110815DFC8F0"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_D783B73378684731869C2C8F409E6C95"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -104,6 +104,14 @@
         "PrivateKeyFile" = "8:"
         "TimeStampServer" = "8:"
         "InstallerBootstrapper" = "3:2"
+            "BootstrapperCfg:{63ACBE69-63AA-4F98-B2B6-99F9E24495F2}"
+            {
+            "Enabled" = "11:TRUE"
+            "PromptEnabled" = "11:TRUE"
+            "PrerequisitesLocation" = "2:1"
+            "Url" = "8:"
+            "ComponentsUrl" = "8:"
+            }
         }
     }
     "Deployable"
@@ -135,69 +143,9 @@
         }
         "File"
         {
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_1D0C777DE14C4F82B0DFFBCBF05E9535"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_34E92A8202034CD799DEA83ED0A54ABE"
             {
-            "SourcePath" = "8:..\\Covid\\bin\\Debug\\netcoreapp3.1\\pre_model.h5"
-            "TargetName" = "8:pre_model.h5"
-            "Tag" = "8:"
-            "Folder" = "8:_60B8640F9D93488D8E9170556C34B540"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_2437274D27CA481CB1ABC846369C633B"
-            {
-            "SourcePath" = "8:..\\Covid\\bin\\Debug\\netcoreapp3.1\\main.py"
-            "TargetName" = "8:main.py"
-            "Tag" = "8:"
-            "Folder" = "8:_60B8640F9D93488D8E9170556C34B540"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_6DEB270DE2AD42A8871F687B89AC31D1"
-            {
-            "SourcePath" = "8:..\\Covid\\bin\\Debug\\netcoreapp3.1\\covid19-global-forecasting-week-4.csv"
-            "TargetName" = "8:covid19-global-forecasting-week-4.csv"
-            "Tag" = "8:"
-            "Folder" = "8:_60B8640F9D93488D8E9170556C34B540"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_CC32AB48DC4C423EA9D5B49BADBDF5C3"
-            {
-            "SourcePath" = "8:..\\Covid\\bin\\Debug\\netcoreapp3.1\\enriched_covid_19_week_2.csv"
+            "SourcePath" = "8:enriched_covid_19_week_2.csv"
             "TargetName" = "8:enriched_covid_19_week_2.csv"
             "Tag" = "8:"
             "Folder" = "8:_60B8640F9D93488D8E9170556C34B540"
@@ -215,10 +163,70 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_E3AF4477D3104362892DE9725BE2D3C2"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_6973E402A5E5428D980FC6E4B5477A55"
             {
-            "SourcePath" = "8:..\\Covid\\bin\\Debug\\netcoreapp3.1\\pre_trend_df.pkl"
+            "SourcePath" = "8:covid19-global-forecasting-week-4.csv"
+            "TargetName" = "8:covid19-global-forecasting-week-4.csv"
+            "Tag" = "8:"
+            "Folder" = "8:_60B8640F9D93488D8E9170556C34B540"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_B6042D89B65D4D53B5547534808248A3"
+            {
+            "SourcePath" = "8:pre_model.h5"
+            "TargetName" = "8:pre_model.h5"
+            "Tag" = "8:"
+            "Folder" = "8:_60B8640F9D93488D8E9170556C34B540"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_C0C859B764F04CF68D6F110815DFC8F0"
+            {
+            "SourcePath" = "8:pre_trend_df.pkl"
             "TargetName" = "8:pre_trend_df.pkl"
+            "Tag" = "8:"
+            "Folder" = "8:_60B8640F9D93488D8E9170556C34B540"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_D783B73378684731869C2C8F409E6C95"
+            {
+            "SourcePath" = "8:main.py"
+            "TargetName" = "8:main.py"
             "Tag" = "8:"
             "Folder" = "8:_60B8640F9D93488D8E9170556C34B540"
             "Condition" = "8:"
